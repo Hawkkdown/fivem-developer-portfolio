@@ -258,7 +258,7 @@ maskCheck(source, message, chatType)
 ## 🤝 Collaboration & Communication
 
 - **Discord:** hawkkdown
-- **GitHub:** [Your GitHub]
+- **GitHub:** https://github.com/futuristickg123-arch/fivem-developer-portfolio
 - **Availability:** EST/8/10
 - **Experience:** 3 years of FiveM development
 
