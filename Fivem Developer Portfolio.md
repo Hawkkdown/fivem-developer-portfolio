@@ -151,38 +151,6 @@ exports.ox_target:addModel(Config.Objects, {
 
 ---
 
-### **5. GMTA SAMP Chat System** (`[chat]/gmto_samp`)
-
-**Type:** Roleplay Chat Enhancement
-
-**Features:**
-
-- Comprehensive RP command system (/me, /do, /my, /say, /shout, /low, /carwhisper)
-- Staff chat system with group-based permissions
-- OOC chat with staff rank coloring
-- Dice rolling system (1-3 dice)
-- Coin flip system
-- 911 emergency call system
-- Help/announce commands
-- Player kick functionality
-- Distance-based chat ranges
-- Language system support
-
-**Technical Highlights:**
-
-```lua
--- Group-based permission system
-ESX.RegisterCommand('kick', {'mod', 'admin', 'management', 'developer'}, function(source, args, raw)
-    -- Kick logic with reason support
-end)
--- Distance-based chat with mask checking
-maskCheck(source, message, chatType)
-
-```
-
-**Files:** server/sv_main.lua (3847 lines), client/cl_main.lua, config.lua, admin functions
-
----
 
 ### **6. Hawkk Resource Suite** (`[Hawkk]/`)
 
@@ -196,9 +164,7 @@ maskCheck(source, message, chatType)
 - **hawkkdown_phone** - Phone UI with apps
 - **hawkkdown_redzone** - Redzone PvP system
 - **hawkkdown_trap** - Trap house mechanics
-- **adminplus-adminjail** - Admin jail system with Discord webhooks
 - **Hawkkdown_LoadingScreen** - Custom loading screen
-- **vms_notify** - Custom notification system
 
 **Technical Highlights:**
 
