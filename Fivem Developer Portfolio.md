@@ -152,7 +152,7 @@ exports.ox_target:addModel(Config.Objects, {
 ---
 
 
-### **6. Hawkk Resource Suite** (`[Hawkk]/`)
+### **5. Hawkk Resource Suite** (`[Hawkk]/`)
 
 **Type:** Multi-Feature Resource Collection
 
@@ -181,7 +181,7 @@ exports.ox_target:addModel(Config.Objects, {
 
 ---
 
-### **7. Hawkkdown Chain Snatching System** (`[Hawkk]/hawkkdown_chains`)
+### **6. Hawkkdown Chain Snatching System** (`[Hawkk]/hawkkdown_chains`)
 
 **Type:** Hood-Style Criminal Activity System
 
@@ -218,7 +218,7 @@ end
 
 ---
 
-### **8. Hawkkdown GSR System** (`[Hawkk]/hawkkdown_gsr`)
+### **7. Hawkkdown GSR System** (`[Hawkk]/hawkkdown_gsr`)
 
 **Type:** Evidence & Police Investigation System
 
@@ -260,7 +260,7 @@ exports.ox_target:addSphereZone({
 **Files:** fxmanifest.lua, config.lua, client/main.lua (234 lines), server/main.lua (137 lines)
 ---
 
-### **7. Custom Discord Bots**
+### **8. Custom Discord Bots**
 
 **Type:** Advanced Discord Integration & Automation
 
