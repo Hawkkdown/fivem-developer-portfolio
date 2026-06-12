@@ -158,17 +158,26 @@ exports.ox_target:addModel(Config.Objects, {
 
 **Resources Include:**
 
-- **hawkkdown_armory** - Custom gun shop with gunsmith attachment system
-- **hawkkdown_housing** - Housing system with interior loading
-- **hawkkdown_basketball** - Basketball mini-game with scoring
-- **hawkkdown_phone** - Phone UI with apps
-- **hawkkdown_redzone** - Redzone PvP system
-- **hawkkdown_trap** - Trap house mechanics
-- **Hawkkdown_LoadingScreen** - Custom loading screen
-- **hawkkdown_chains** - Hood-style chain snatching system with wearable props
-- **hawkkdown_gsr** - Gun Powder Residue (GSR) evidence system
-- **hawkkdown_nocrosshair** - Simple crosshair removal for immersive roleplay
-- **hawkkdown_gunjam** - Realistic weapon jamming system with progressive chances
+- **hawkk_loadingscreen** - Premium glassmorphic loading screen with synced music player and YouTube API video backgrounds
+- **hawkk_trap** - Trap house drug cooking and packaging mechanics with private routing instances
+- **hawkkdown_admin** - Fully optimized admin menu and server administration commands
+- **hawkkdown_backpack** - Dynamic equippable backpack storage with custom props and movement speed debuffs
+- **hawkkdown_carbreak** - Cinematic car break-in, window smashing, lockpicking QTE minigames, and search loot tables
+- **hawkkdown_carmenu** - Glassmorphic vehicle cockpit controller with seatbelts, cruise limits, and underglow neons
+- **hawkkdown_chains** - Hood-style chain snatching with custom attachments, break multipliers, and fence sell NPCs
+- **hawkkdown_cornerdealing** - Fully integrated NPC drug corner dealing with pathing, police busts, price negotiations, and rival gang robberies
+- **hawkkdown_dispatch** - Reliable police notification alerts, mapping blips, and call routing
+- **hawkkdown_forgedcheck** - Criminal check forging system with bank teller interaction and dumpster searching
+- **hawkkdown_graffiti** - Canvas drawing editor to spray custom DUI text/images onto FiveM world surfaces
+- **hawkkdown_gsr** - Realistic Gunshot Residue detection, washing locations, and police GSR kits
+- **hawkkdown_gunjam** - Realistic weapon jamming rates, unjamming progress anims, and skill check minigames
+- **hawkkdown_keyfob** - Interactive floating keyfob widget controlling locks, engine, neons, trunk/doors, and suspension heights
+- **hawkkdown_kidnapping** - Roleplay kidnapping script allowing players to zip-tie, intimidate, and stuff players/NPCs into car trunks
+- **hawkkdown_lean** - Drug mixing system with disabled locomotion and glassmorphic HUD bars
+- **hawkkdown_noclip** - Ultra-smooth admin flight/noclip utilities
+- **hawkkdown_nocrosshair** - Lightweight crosshair remover for immersive roleplay servers
+- **hawkkdown_perc** - Medical pill consumption script with custom screen filters and movement effects
+- **hawkkdown_scale** - Syncable ped scale and height management system with feet/cm metrics and silhouettes
 
 **Technical Highlights:**
 
@@ -303,9 +312,395 @@ end
 
 **Files:** fxmanifest.lua, config.lua, client/main.lua (180 lines), server/main.lua (25 lines)
 
+### **9. Hawkk Loading Screen** (`[Hawkk]/hawkk_loadingscreen`)
+
+**Type:** Dynamic Server UI Entry
+
+**Features:**
+
+- Top branding banner with wings logo and server community link.
+- Synced background music player with YouTube API integrations.
+- Member rosters with circular staff avatars and custom roles.
+- Smooth FiveM load state progress events synchronization.
+- Glassmorphic media control HUD (play, pause, volume sliders).
+
+**Technical Highlights:**
+
+```javascript
+// YouTube IFrame Player integration
+window.onYouTubeIframeAPIReady = function() {
+    player = new YT.Player('bg-video', {
+        videoId: 'tYjPXFlZlq8',
+        playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 0 },
+        events: { 'onReady': onPlayerReady }
+    });
+};
+```
+
+**Files:** fxmanifest.lua, index.html, style.css, script.js
+
 ---
 
-### **9. Custom Discord Bots**
+### **10. Hawkk Trap House System** (`[Hawkk]/hawkk_trap`)
+
+**Type:** Private Routing & Drug Processing System
+
+**Features:**
+
+- Buying trap houses from an NPC dealer.
+- Instanced private interior spaces (each house running its own routing bucket).
+- Drug cooking and packaging minigames.
+- Synced boombox audio playing YouTube/custom links inside the instance.
+
+**Technical Highlights:**
+
+```lua
+-- Routing bucket instancing
+SetPlayerRoutingBucket(playerId, trapHouseBucketId)
+-- Cook drug interaction point check
+if #(playerCoords - cookCoords) < 1.5 then
+    startCookingMinigame()
+end
+```
+
+**Files:** config.lua, client/main.lua, server/main.lua, traphouses.lua, cords.lua
+
+---
+
+### **11. Hawkkdown Admin Management** (`[Hawkk]/hawkkdown_admin`)
+
+**Type:** Server Administration Utility
+
+**Features:**
+
+- Administrative action dashboard (spectating, player teleports).
+- Real-time command executor logging and discord notifications.
+- Lightweight group permissions (ESX groups integration).
+
+**Technical Highlights:**
+
+```lua
+-- Teleport admin to target player ped
+SetEntityCoords(ped, targetCoords.x, targetCoords.y, targetCoords.z, false, false, false, false)
+```
+
+**Files:** client/main.lua, server/main.lua, config.lua
+
+---
+
+### **12. Hawkkdown Backpack Storage** (`[Hawkk]/hawkkdown_backpack`)
+
+**Type:** Inventory Upgrade & Player Debuff System
+
+**Features:**
+
+- Equippable custom props matching backpack size models.
+- Slot and weight expansion modifications based on size.
+- Weight-based character movement speed debuffs.
+
+**Technical Highlights:**
+
+```lua
+-- Attach prop to ped bone (Spine bone)
+AttachEntityToEntity(prop, ped, GetPedBoneIndex(ped, 24818), 
+    offset.x, offset.y, offset.z, rot.x, rot.y, rot.z, 
+    true, true, false, true, 2, true)
+```
+
+**Files:** client/visual.lua, client/speed.lua, client/main.lua, server/main.lua
+
+---
+
+### **13. Hawkkdown Cinematic Carbreak** (`[Hawkk]/hawkkdown_carbreak`)
+
+**Type:** Advanced Vehicle Robbery System
+
+**Features:**
+
+- Unique lockpicking lock sequence with top-down focused cameras.
+- Window smash particle effects, audio triggers, and smoke.
+- Glovebox searches yielding random loot items based on configurations.
+- Police notifications upon failures or alarm triggers.
+
+**Technical Highlights:**
+
+```lua
+-- Cinematic camera interpolation looking down on vehicle
+local cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
+SetCamCoord(cam, camCoords.x, camCoords.y, camCoords.z)
+PointCamAtEntity(cam, vehicle, 0.0, 0.0, 0.0, true)
+RenderScriptCams(true, true, 1000, true, true)
+```
+
+**Files:** client/main.lua, server/main.lua, config.lua
+
+---
+
+### **14. Hawkkdown Vehicle Menu Panel** (`[Hawkk]/hawkkdown_carmenu`)
+
+**Type:** Glassmorphic Vehicle Controller
+
+**Features:**
+
+- Speedometer SVG gauges and RPM bars.
+- Dynamic seatbelt toggle checks (fails result in windshield ejects at high speed).
+- Cruise speed locks and fine-tuning.
+- Custom neon lighting controllers.
+
+**Technical Highlights:**
+
+```lua
+-- Seatbelt ejection calculations
+if speedDiff > Config.Seatbelt.EjectSpeed and not seatbeltOn then
+    local ejectForce = velocity * Config.Seatbelt.EjectForce
+    SetEntityVelocity(ped, ejectForce.x, ejectForce.y, ejectForce.z)
+end
+```
+
+**Files:** client/seatbelt.lua, client/cruise.lua, client/neon.lua, client/hud.lua, ui/index.html, ui/style.css, ui/script.js
+
+---
+
+### **15. Hawkkdown Corner Dealing** (`[Hawkk]/hawkkdown_cornerdealing`)
+
+**Type:** Dynamic Drug Distribution System
+
+**Features:**
+
+- Dealing sessions (`/corner`) validating drugs inventory.
+- Walking and driving buyers spawning out of sight and pathing to dealer.
+- Context menu options (Sell, Price Negotiation, Decline).
+- Hostile gang robberies and police sweeps checking line-of-sight.
+
+**Technical Highlights:**
+
+```lua
+-- NPC vehicle driver pathing to dealer coordinates
+TaskVehicleDriveToCoord(buyerPed, vehicle, dealerCoords.x, dealerCoords.y, dealerCoords.z, 
+    15.0, 0, GetHashKey(model), 786603, 2.0, true)
+```
+
+**Files:** client/main.lua, server/main.lua, config.lua
+
+---
+
+### **16. Hawkkdown Police Dispatch System** (`[Hawkk]/hawkkdown_dispatch`)
+
+**Type:** Crime Reporting & Mapping Blip System
+
+**Features:**
+
+- Mapping GPS coordinates, blips, and route drawing for officers.
+- Organized client notifications showing caller details.
+
+**Technical Highlights:**
+
+```lua
+-- Police alert map blip creation
+local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
+SetBlipSprite(blip, 161)
+SetBlipColour(blip, 1)
+```
+
+**Files:** client/main.lua, server/main.lua, config.lua
+
+---
+
+### **17. Hawkkdown Forged Checks** (`[Hawkk]/hawkkdown_forgedcheck`)
+
+**Type:** Financial Crime & Loot System
+
+**Features:**
+
+- Bank teller menus for check forgery cashing.
+- Dumpster searching with ox_target, clean entity ID filters, and loot.
+
+**Technical Highlights:**
+
+```lua
+-- Dumpster non-networked unique coordinates identification
+local function getDumpsterId(entity)
+    local c = GetEntityCoords(entity)
+    return ("dumpster_%.2f_%.2f"):format(c.x, c.y)
+end
+```
+
+**Files:** client/bank.lua, client/dumpster.lua, server/main.lua
+
+---
+
+### **18. Hawkkdown Graffiti System** (`[Hawkk]/hawkkdown_graffiti`)
+
+**Type:** Artistic Custom Surface Spraying
+
+**Features:**
+
+- HTML NUI canvas editor (custom brush, eraser, clear).
+- ImgBB base64 image uploading and database caching.
+- Synced DUI projection textures rendering onto world surface vectors.
+
+**Technical Highlights:**
+
+```lua
+-- DUI world projection drawing
+DrawSpritePoly(coords1, coords2, coords3, coords4, 
+    "graffiti_dui", textureName, 
+    0.0, 0.0, 1.0, 1.0, 
+    255, 255, 255, 255)
+```
+
+**Files:** client/render.lua, client/dui_manager.lua, ui/index.html, server/main.lua
+
+---
+
+### **19. Hawkkdown Keyfob System** (`[Hawkk]/hawkkdown_keyfob`)
+
+**Type:** Interactive Vehicle Fob Widget
+
+**Features:**
+
+- Handheld keyfob widget.
+- Locks/unlocks, neon underglow presets, engine startup/shutdown.
+- Door and trunk/hood toggles, suspension height adjustments.
+- Panic sirens alerting officers.
+
+**Technical Highlights:**
+
+```lua
+-- Suspension height offsets adjustment
+SetVehicleSuspensionHeight(vehicle, suspensionHeight)
+```
+
+**Files:** client/nui.lua, client/vehicle.lua, client/doors.lua, ui/index.html, ui/style.css, ui/script.js
+
+---
+
+### **20. Hawkkdown Kidnapping** (`[Hawkk]/hawkkdown_kidnapping`)
+
+**Type:** Roleplay Hostage Management
+
+**Features:**
+
+- Zip-tie interactions restraining movement.
+- Intimidating players/NPCs and forcing hands-up anims.
+- Stuffing players into vehicle trunks.
+
+**Technical Highlights:**
+
+```lua
+-- Attach ped inside vehicle trunk bone coordinates
+AttachEntityToEntity(ped, vehicle, GetEntityBoneIndexByName(vehicle, "trunk"), 
+    0.0, -1.0, 0.5, 0.0, 0.0, 0.0, 
+    true, true, false, true, 2, true)
+```
+
+**Files:** client/main.lua, server/main.lua, config.lua
+
+---
+
+### **21. Hawkkdown Lean Mixing** (`[Hawkk]/hawkkdown_lean`)
+
+**Type:** Drug Mixing Minigame & HUD
+
+**Features:**
+
+- Lean mixing progress overlays.
+- Restricting speed/sprints and jumping actions.
+- Dynamic screen filter corrective actions.
+
+**Technical Highlights:**
+
+```lua
+-- Disable jumping and movement during mixing thread loop
+DisableControlAction(0, 22, true) -- Jump
+DisableControlAction(0, 21, true) -- Sprint
+```
+
+**Files:** client/mixing.lua, html/index.html, html/style.css, html/script.js
+
+---
+
+### **22. Hawkkdown Noclip Command** (`[Hawkk]/hawkkdown_noclip`)
+
+**Type:** Administrative Fly Locomotion
+
+**Features:**
+
+- Vector math flying translations.
+- Configurable speed steps and overlays showing positions.
+
+**Technical Highlights:**
+
+```lua
+-- Update coordinate vectors based on camera angle vector calculations
+local nextCoords = currentCoords + (direction * speed)
+SetEntityCoordsNoOffset(ped, nextCoords.x, nextCoords.y, nextCoords.z, true, true, true)
+```
+
+**Files:** client/main.lua, config.lua
+
+---
+
+### **23. Hawkkdown Crosshair Remover** (`[Hawkk]/hawkkdown_nocrosshair`)
+
+**Type:** Immersive HUD Modification
+
+**Features:**
+
+- Automatically disabling the screen reticle when aiming.
+
+**Technical Highlights:**
+
+```lua
+-- Reticle hiding HUD component frame check
+HideHudComponentThisFrame(14)
+```
+
+**Files:** client/main.lua
+
+---
+
+### **24. Hawkkdown Prescription Pills** (`[Hawkk]/hawkkdown_perc`)
+
+**Type:** Consumable Effects System
+
+**Features:**
+
+- Screen flash filters, color corrections, and camera shakes.
+- Sprint speed overrides.
+
+**Technical Highlights:**
+
+```lua
+-- Apply screen aesthetic filter effect on consumer ped
+StartScreenEffect("DrugsDrivingIn", 0, true)
+```
+
+**Files:** client/main.lua, config.lua
+
+---
+
+### **25. Hawkkdown Ped Scale Menu** (`[Hawkk]/hawkkdown_scale`)
+
+**Type:** Ped Scale Synchronization
+
+**Features:**
+
+- Synced height adjustments with feet/cm labels.
+- Live 3D silhouetted overlays.
+
+**Technical Highlights:**
+
+```lua
+-- Synchronize ped scale transformation matrix
+SetPedScale(ped, scaleValue)
+```
+
+**Files:** client/main.lua, server/main.lua, config.lua
+
+---
+
+### **26. Custom Discord Bots**
 
 **Type:** Advanced Discord Integration & Automation
 
